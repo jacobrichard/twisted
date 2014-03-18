@@ -253,7 +253,7 @@ class LogFileTestCase(unittest.TestCase):
         Specifying an invalid directory to L{LogFile} raises C{IOError}.
         """
         e = self.assertRaises(
-            IOError, logfile.LogFile, self.name, 'this_dir_does_not_exist')
+            OSError, logfile.LogFile, self.name, 'this_dir_does_not_exist')
         self.assertEqual(e.errno, errno.ENOENT)
 
 
