@@ -60,25 +60,18 @@ class BaseLogFile:
         Open the log file.
         """
         self.closed = False
-        if os.path.exists(self.path):
-            self._file = file(self.path, "r+", 1)
-            self._file.seek(0, 2)
+        if self.defaultMode is None:
+            self._file = self._file = os.fdopen(os.open(
+                self.path, os.O_CREAT|os.O_RDWR), 'r+', 1)
         else:
-            if self.defaultMode is not None:
-                # Set the lowest permissions
-                oldUmask = os.umask(0777)
-                try:
-                    self._file = file(self.path, "w+", 1)
-                finally:
-                    os.umask(oldUmask)
-            else:
-                self._file = file(self.path, "w+", 1)
-        if self.defaultMode is not None:
+            self._file = self._file = os.fdopen(os.open(
+                self.path, os.O_CREAT|os.O_RDWR, 0000), 'r+', 1) 
             try:
                 os.chmod(self.path, self.defaultMode)
             except OSError:
-                # Probably /dev/null or something?
                 pass
+        self._file.seek(0,2)
+
 
     def __getstate__(self):
         state = self.__dict__.copy()
