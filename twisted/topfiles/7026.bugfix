@@ -1,0 +1,1 @@
+twisted.python.logfile now retains the correct system umask when concurrently rotating logfiles.
